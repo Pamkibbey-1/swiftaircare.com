@@ -74,3 +74,11 @@ The domain is managed through Spaceship. Connect its DNS to GitHub Pages after c
 The site uses JavaScript for browser interactions and Node.js for the build and development server. GitHub Pages serves the generated static files; no Java or persistent Node.js production server is required. The form provider handles enquiry delivery.
 
 Fonts and imagery are local, with no external font requests or analytics scripts. Font licences and image provenance are documented in [assets/ASSETS.md](assets/ASSETS.md).
+
+## Machine-readable website information
+
+Each build produces `/llms.txt`, `/llms-full.txt`, `/business.json`, and an `index.md` version beside each canonical HTML page. The HTML advertises its Markdown representation and includes linked business, website, service-area, service, FAQ, and breadcrumb data where appropriate. These are generated from the public page content and business configuration by `scripts/knowledge.mjs`.
+
+The form's unavailable status is rendered into the initial HTML, so readers that do not execute JavaScript see it correctly. Form examples are excluded from the text exports. Unspecified phone numbers, email addresses, and hours stay unspecified; the exports contain no residential address, invented ratings, or instant-booking claims.
+
+`robots.txt` explicitly allows search and user-retrieval crawlers and retains the existing open wildcard policy. Allowing retrieval is not a guarantee of indexing, citations, or recommendations. The `llms.txt` format is an emerging convention; Google Search does not require it. GitHub Pages serves parallel Markdown files; it does not support custom content-negotiation or response-header configuration in this project.
