@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir, cp, rm } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { business, services } from '../site.config.js';
+import { publishKnowledge } from './knowledge.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const output = join(root, 'dist');
@@ -11,14 +12,6 @@ const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;
 let home = await readFile(join(root, 'index.html'), 'utf8');
 const cardMarkup = services.map(s => `<article class="service-card"><div class="service-icon"><svg class="icon" aria-hidden="true"><use href="#i-${s.icon}"/></svg></div><h3>${escape(s.name)}</h3><p>${escape(s.summary)}</p><a href="./services/${s.slug}/">Explore ${escape(s.name.toLowerCase())}</a></article>`).join('');
 home = home.replace('<div class="service-grid" id="service-cards"></div>', `<div class="service-grid" id="service-cards">${cardMarkup}</div>`);
-const structured = {
-  '@context': 'https://schema.org', '@type': 'HVACBusiness', name: business.name,
-  url: `https://${business.domain}/`, image: `https://${business.domain}/assets/hvac-service.jpg`,
-  areaServed: { '@type': 'Place', name: business.serviceArea },
-  ...(business.phone ? { telephone: business.phone } : {}),
-  ...(business.email ? { email: business.email } : {}),
-};
-home = home.replace('</head>', `<script type="application/ld+json">${JSON.stringify(structured).replace(/</g, '\\u003c')}</script>\n</head>`);
 await writeFile(join(output, 'index.html'), home);
 for (const file of ['styles.css', 'app.js', 'site.config.js']) await cp(join(root, file), join(output, file));
 await cp(join(root, 'assets'), join(output, 'assets'), { recursive: true, filter: source => !source.endsWith('.md') });
@@ -49,5 +42,6 @@ urls.push('privacy/');
 await writeFile(join(output, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(path => `<url><loc>https://${business.domain}/${path}</loc></url>`).join('')}</urlset>`);
 await writeFile(join(output, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: https://${business.domain}/sitemap.xml\n`);
 await writeFile(join(output, '404.html'), `<!doctype html><html lang="en-CA"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Page not found | Swift Air Care</title><style>body{margin:0;background:#f1f6f9;color:#20292f;font:18px/1.7 Arial,sans-serif;min-height:100vh;display:grid;place-items:center}main{padding:35px;max-width:550px}h1{font-size:44px;line-height:1.2}a{color:#c82032}</style></head><body><main><p>SWIFT AIR CARE</p><h1>Let’s get you back to comfort.</h1><p>We couldn’t find that page.</p><a href="https://${business.domain}/">Visit the home page</a></main></body></html>`);
+await publishKnowledge({ output, business, services, paths: urls });
 console.log(`Built ${urls.length} pages in ${output}`);
 if (!business.bookingEndpoint) console.log('Launch note: booking delivery is not connected; the form is visibly disabled.');
