@@ -39,7 +39,7 @@ The form validates required fields, includes explicit enquiry consent and a spam
 
 The repository contains `.github/workflows/deploy.yml`, which builds, checks, and deploys `dist/` when changes are pushed to `main` or `master`.
 
-1. Create or select the GitHub repository for this business and push these source files. The local repository currently has no remote configured.
+1. The source repository is [Pamkibbey-1/swiftaircare.com](https://github.com/Pamkibbey-1/swiftaircare.com). Upload or push future source changes to its main branch.
 2. In the repository, open **Settings → Pages → Build and deployment → Source** and select **GitHub Actions**.
 3. Run the deployment workflow or push a commit, then check that the build and deployment succeed.
 4. In **Settings → Pages → Custom domain**, enter `swiftaircare.com` and save. Verify domain ownership in GitHub using its supplied TXT record when prompted.
@@ -54,11 +54,11 @@ The build emits `CNAME` for portability, but with a custom GitHub Actions deploy
 | A | `@` | `185.199.109.153` |
 | A | `@` | `185.199.110.153` |
 | A | `@` | `185.199.111.153` |
-| CNAME | `www` | `YOUR-GITHUB-USERNAME.github.io` |
+| CNAME | `www` | `pamkibbey-1.github.io` |
 
-Replace the username with the actual owner of the repository. The `www` target excludes the repository name. These values were checked against GitHub’s documentation on November 25, 2026; recheck the linked documentation when making the change. DNS and certificate provisioning can take up to 24 hours.
+The `www` target excludes the repository name. These values were checked against GitHub’s documentation on November 25, 2026; recheck the linked documentation when making the change. DNS and certificate provisioning can take up to 24 hours.
 
-No repository has been created or pushed, no DNS has been changed, and the public domain has not been deployed by this build.
+The domain is managed through Spaceship. Connect its DNS to GitHub Pages after confirming the Pages deployment. Online service requests remain disabled until business contact details and the Formspree endpoint are supplied.
 
 ## Editing guide
 
